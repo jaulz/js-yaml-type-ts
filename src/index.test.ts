@@ -14,6 +14,7 @@ customModule: !!ts/module |
     boolean: true,
     func: () => true,
     asyncFunc: async () => true,
+    jsx: (React) => <Test />,
   }
 `,
     { schema }
@@ -45,6 +46,7 @@ customModule: !!ts/module |
     boolean: true,
     func: () => true,
     asyncFunc: async () => true,
+    jsx: (React) => <Test />,
   }
 `,
         options
