@@ -20,7 +20,7 @@ customModule: !!ts/module |
 `,
     { schema }
   )
-  console.log(content)
+
   expect(content).not.toBeNull()
   expect(content.customModule).toBeDefined()
   expect(content.customModule.default).toBeDefined()
