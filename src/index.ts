@@ -9,30 +9,30 @@ export interface Options {
   log?: (message?: any, ...optionalParams: any[]) => void
 }
 
-export const codeSymbol = Symbol('code')
-export const transpiledCodeSymbol = Symbol('transpiledCode')
-export const evalSymbol = Symbol('eval')
+export const CodeSymbol = Symbol('code')
+export const TranspiledCodeSymbol = Symbol('transpiledCode')
+export const EvalSymbol = Symbol('eval')
 
 export class Module {
-  [codeSymbol]: string;
-  [transpiledCodeSymbol]: string;
-  [evalSymbol]: any
+  [CodeSymbol]: string;
+  [TranspiledCodeSymbol]: string;
+  [EvalSymbol]: any
 
   constructor(code: string, compilerOptions: CompilerOptions) {
-    this[codeSymbol] = code
-    this[transpiledCodeSymbol] = transpile(code, compilerOptions)
+    this[CodeSymbol] = code
+    this[TranspiledCodeSymbol] = transpile(code, compilerOptions)
 
     // Intentional line breaks in case the last line of code is a comment
-    this[evalSymbol] = new Function(`const exports = {}; 
-        ${this[transpiledCodeSymbol]}; 
+    this[EvalSymbol] = new Function(`const exports = {}; 
+        ${this[TranspiledCodeSymbol]}; 
         return exports;
       `)()
 
     // Create getters
-    for (let key in this[evalSymbol]) {
+    for (let key in this[EvalSymbol]) {
       Object.defineProperty(this, key, {
         get: () => {
-          return this[evalSymbol][key]
+          return this[EvalSymbol][key]
         },
         set: () => {
           // No setter
@@ -66,7 +66,7 @@ export default function createType({
     instanceOf: Module,
     represent: (data: any) => {
       // Should we dump the transpiled code or the code as it came in?
-      const property = dumpTranspiledCode ? transpiledCodeSymbol : codeSymbol
+      const property = dumpTranspiledCode ? TranspiledCodeSymbol : CodeSymbol
       return (data as Module)[property]
     },
   })
