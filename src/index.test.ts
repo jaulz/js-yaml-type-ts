@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import yaml from 'js-yaml'
 import createType from './index'
 
@@ -28,8 +26,42 @@ customModule: !!ts/module |
   expect(content.customModule.default.func).toBeDefined()
   expect(content.customModule.default.func()).toEqual(true)
   expect(content.customModule.default.asyncFunc()).resolves.toEqual(true)
-  expect(content).toMatchSnapshot('load')
-  expect(yaml.dump(content, { schema })).toMatchSnapshot('dump')
+  expect(content).toMatchSnapshot()
+})
+
+test('dumps code correctly', () => {
+  const type = createType()
+  const schema = new yaml.Schema({
+    include: [yaml.DEFAULT_SAFE_SCHEMA],
+    explicit: [type],
+  })
+  const options = { schema }
+  const content = yaml.load(
+    yaml.dump(
+      yaml.load(
+        `
+customModule: !!ts/module |
+  export default {
+    boolean: true,
+    func: () => true,
+    asyncFunc: async () => true,
+  }
+`,
+        options
+      ),
+      options
+    ),
+    options
+  )
+
+  expect(content).not.toBeNull()
+  expect(content.customModule).toBeDefined()
+  expect(content.customModule.default).toBeDefined()
+  expect(content.customModule.default.boolean).toEqual(true)
+  expect(content.customModule.default.func).toBeDefined()
+  expect(content.customModule.default.func()).toEqual(true)
+  expect(content.customModule.default.asyncFunc()).resolves.toEqual(true)
+  expect(content).toMatchSnapshot()
 })
 
 test('throw error for invalid module', () => {
