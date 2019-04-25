@@ -46,24 +46,26 @@ export interface Options {
   log?: (message?: any, ...optionalParams: any[]) => void
 }
 
+const codeSymbol = Symbol('code')
+const evalSymbol = Symbol('eval')
 class Module {
-  code: string
-  eval: any
+  [codeSymbol]: string;
+  [evalSymbol]: any
 
   constructor(code: string, compilerOptions: CompilerOptions) {
-    this.code = code
+    this[codeSymbol] = code
 
     // Intentional line breaks in case the last line of code is a comment
-    this.eval = new Function(`const exports = {}; 
+    this[evalSymbol] = new Function(`const exports = {}; 
         ${transpile(code, compilerOptions)}; 
         return exports;
       `)()
 
     // Create getters
-    for (let key in this.eval) {
+    for (let key in this[evalSymbol]) {
       Object.defineProperty(this, key, {
         get: () => {
-          return this.eval[key]
+          return this[evalSymbol][key]
         },
         set: () => {
           // No setter
