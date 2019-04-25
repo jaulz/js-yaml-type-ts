@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`throw error for invalid module 1`] = `
+"cannot resolve a node with !<tag:yaml.org,2002:ts/module> explicit tag at line 2, column 32:
+    customModule: !!ts/module '---'
+                                   ^"
+`;
+
+exports[`throw error for invalid module: log 1`] = `[Error: SyntaxError: Expression expected.]`;
+
+exports[`transpiles code correctly: dump 1`] = `
+"customModule: !<tag:yaml.org,2002:ts/module> |
+  export default {
+    boolean: true,
+    func: () => true,
+    asyncFunc: async () => true,
+  }
+"
+`;
+
+exports[`transpiles code correctly: load 1`] = `
+Object {
+  "customModule": Module {
+    "code": "export default {
+  boolean: true,
+  func: () => true,
+  asyncFunc: async () => true,
+}
+",
+    "eval": Object {
+      "default": Object {
+        "asyncFunc": [Function],
+        "boolean": true,
+        "func": [Function],
+      },
+    },
+  },
+}
+`;
