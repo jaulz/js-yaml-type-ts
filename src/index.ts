@@ -8,38 +8,8 @@ export interface Options {
   log?: (message?: any, ...optionalParams: any[]) => void
 }
 
-export const CodeSymbol = Symbol('code')
-export const TranspiledCodeSymbol = Symbol('transpiledCode')
-export const EvalSymbol = Symbol('eval')
-
-export class TSModule {
-  [CodeSymbol]: string;
-  [TranspiledCodeSymbol]: string;
-  [EvalSymbol]: any
-
-  constructor(code: string, compilerOptions: CompilerOptions) {
-    this[CodeSymbol] = code
-    this[TranspiledCodeSymbol] = transpile(code, compilerOptions)
-
-    // Intentional line breaks in case the last line of code is a comment
-    this[EvalSymbol] = new Function(`const exports = {}; 
-        ${this[TranspiledCodeSymbol]}; 
-        return exports;
-      `)()
-
-    // Create getters
-    for (let key in this[EvalSymbol]) {
-      Object.defineProperty(this, key, {
-        get: () => {
-          return this[EvalSymbol][key]
-        },
-        set: () => {
-          // No setter
-        },
-      })
-    }
-  }
-}
+export const OriginalCodeProperty = '__originalCode'
+export const TranspiledCodeProperty = '__transpiledCode'
 
 export default function createType({
   name = 'tag:yaml.org,2002:ts/module',
@@ -59,15 +29,29 @@ export default function createType({
       return true
     },
     construct: (code: string) => {
-      return new TSModule(code, compilerOptions)
+      const transpiledCode = transpile(code, compilerOptions)
+
+      // Intentional line breaks in case the last line of code is a comment
+      const tsModule = new Function(`const exports = {}; 
+      ${transpiledCode}; 
+      return exports;
+    `)()
+
+      // Define meta data
+      tsModule[OriginalCodeProperty] = code
+      tsModule[TranspiledCodeProperty] = transpiledCode
+
+      return tsModule
     },
-    instanceOf: TSModule,
+    predicate: (data: any) => {
+      return !!data[OriginalCodeProperty] && !!data[TranspiledCodeProperty]
+    },
     represent: {
       original: (data: any) => {
-        return (data as TSModule)[CodeSymbol]
+        return data[OriginalCodeProperty]
       },
       transpiled: (data: any) => {
-        return (data as TSModule)[TranspiledCodeSymbol]
+        return data[TranspiledCodeProperty]
       },
     },
     defaultStyle: 'transpiled',
