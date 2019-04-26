@@ -4,7 +4,6 @@ import ts from 'typescript'
 
 export interface Options {
   name?: string
-  dumpTranspiledCode?: boolean
   compilerOptions?: CompilerOptions
   log?: (message?: any, ...optionalParams: any[]) => void
 }
@@ -13,7 +12,7 @@ export const CodeSymbol = Symbol('code')
 export const TranspiledCodeSymbol = Symbol('transpiledCode')
 export const EvalSymbol = Symbol('eval')
 
-export class Module {
+export class TSModule {
   [CodeSymbol]: string;
   [TranspiledCodeSymbol]: string;
   [EvalSymbol]: any
@@ -44,7 +43,6 @@ export class Module {
 
 export default function createType({
   name = 'tag:yaml.org,2002:ts/module',
-  dumpTranspiledCode = true,
   compilerOptions = {},
   log = () => {},
 }: Options = {}) {
@@ -61,14 +59,18 @@ export default function createType({
       return true
     },
     construct: (code: string) => {
-      return new Module(code, compilerOptions)
+      return new TSModule(code, compilerOptions)
     },
-    instanceOf: Module,
-    represent: (data: any) => {
-      // Should we dump the transpiled code or the code as it came in?
-      const property = dumpTranspiledCode ? TranspiledCodeSymbol : CodeSymbol
-      return (data as Module)[property]
+    instanceOf: TSModule,
+    represent: {
+      original: (data: any) => {
+        return (data as TSModule)[CodeSymbol]
+      },
+      transpiled: (data: any) => {
+        return (data as TSModule)[TranspiledCodeSymbol]
+      },
     },
+    defaultStyle: 'transpiled',
   })
 }
 
@@ -84,7 +86,7 @@ export function transpile(
       jsx: ts.JsxEmit.React,
       noEmitHelpers: false,
       sourceMap: false,
-      inlineSourceMap: true,
+      inlineSourceMap: false,
       ...compilerOptions,
     },
   })
