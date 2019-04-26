@@ -8,8 +8,8 @@ export interface Options {
   log?: (message?: any, ...optionalParams: any[]) => void
 }
 
-export const OriginalCodeProperty = '__originalCode'
-export const TranspiledCodeProperty = '__transpiledCode'
+export const OriginalCodeSymbol = Symbol('originalCode')
+export const TranspiledCodeSymbol = Symbol('transpiledCode')
 
 export default function createType({
   name = 'tag:yaml.org,2002:ts/module',
@@ -38,20 +38,20 @@ export default function createType({
     `)()
 
       // Define meta data
-      tsModule[OriginalCodeProperty] = code
-      tsModule[TranspiledCodeProperty] = transpiledCode
+      tsModule[OriginalCodeSymbol] = code
+      tsModule[TranspiledCodeSymbol] = transpiledCode
 
       return tsModule
     },
     predicate: (data: any) => {
-      return !!data[OriginalCodeProperty] && !!data[TranspiledCodeProperty]
+      return !!data[OriginalCodeSymbol] && !!data[TranspiledCodeSymbol]
     },
     represent: {
       original: (data: any) => {
-        return data[OriginalCodeProperty]
+        return data[OriginalCodeSymbol]
       },
       transpiled: (data: any) => {
-        return data[TranspiledCodeProperty]
+        return data[TranspiledCodeSymbol]
       },
     },
     defaultStyle: 'transpiled',

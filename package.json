@@ -1,6 +1,6 @@
 {
   "name": "js-yaml-type-ts-module",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Custom type for js-yaml to include Typescript modules",
   "main": "build/index.js",
   "types": "build/index.d.ts",
