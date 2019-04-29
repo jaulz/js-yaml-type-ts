@@ -69,8 +69,10 @@ export function compile<T = any>(
   const compiledModule = vm.run(new VMScript(transpiledCode))
 
   // Add meta data
-  compiledModule[OriginalCodeSymbol] = originalCode
-  compiledModule[TranspiledCodeSymbol] = transpiledCode
+  if (compiledModule) {
+    compiledModule[OriginalCodeSymbol] = originalCode
+    compiledModule[TranspiledCodeSymbol] = transpiledCode
+  }
 
   return compiledModule
 }
