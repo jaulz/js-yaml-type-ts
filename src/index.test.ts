@@ -1,5 +1,5 @@
 import yaml from 'js-yaml'
-import createType, { TSModule } from './index'
+import createType from './index'
 
 describe('createType', () => {
   it('transpiles code correctly', () => {
@@ -93,88 +93,6 @@ customModule: !!ts/module |
 `,
           options
         ),
-        {
-          ...options,
-          styles: {
-            '!!ts/module': 'transpiled',
-          },
-        }
-      ),
-      options
-    )
-
-    expect(content).not.toBeNull()
-    expect(content.customModule).toBeDefined()
-    expect(content.customModule.default).toBeDefined()
-    expect(content.customModule.default.boolean).toEqual(true)
-    expect(content.customModule.default.func).toBeDefined()
-    expect(content.customModule.default.func()).toEqual(true)
-    expect(content.customModule.default.asyncFunc()).resolves.toEqual(true)
-    expect(content).toMatchSnapshot()
-  })
-
-  it('dumps code correctly if the module was manually created (original style)', () => {
-    const type = createType()
-    const schema = new yaml.Schema({
-      include: [yaml.DEFAULT_SAFE_SCHEMA],
-      explicit: [type],
-    })
-    const options = { schema }
-    const customModule = new TSModule({
-      default: {
-        boolean: true,
-        func: () => true,
-        asyncFunc: () => {
-          return Promise.resolve(true)
-        },
-      },
-    })
-    const content = yaml.load(
-      yaml.dump(
-        {
-          customModule,
-        },
-        {
-          ...options,
-          styles: {
-            '!!ts/module': 'original',
-          },
-        }
-      ),
-      options
-    )
-
-    expect(content).not.toBeNull()
-    expect(content.customModule).toBeDefined()
-    expect(content.customModule.default).toBeDefined()
-    expect(content.customModule.default.boolean).toEqual(true)
-    expect(content.customModule.default.func).toBeDefined()
-    expect(content.customModule.default.func()).toEqual(true)
-    expect(content.customModule.default.asyncFunc()).resolves.toEqual(true)
-    expect(content).toMatchSnapshot()
-  })
-
-  it('dumps code correctly if the module was manually created (transpiled style)', () => {
-    const type = createType()
-    const schema = new yaml.Schema({
-      include: [yaml.DEFAULT_SAFE_SCHEMA],
-      explicit: [type],
-    })
-    const options = { schema }
-    const customModule = new TSModule({
-      default: {
-        boolean: true,
-        func: () => true,
-        asyncFunc: () => {
-          return Promise.resolve(true)
-        },
-      },
-    })
-    const content = yaml.load(
-      yaml.dump(
-        {
-          customModule,
-        },
         {
           ...options,
           styles: {

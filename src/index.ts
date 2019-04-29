@@ -15,43 +15,6 @@ export const OriginalCodeSymbol = Symbol('originalCode')
 export const TranspiledCodeSymbol = Symbol('transpiledCode')
 export const ModuleSymbol = Symbol('module')
 
-export class TSModule {
-  [OriginalCodeSymbol]: string;
-  [TranspiledCodeSymbol]: string;
-  [ModuleSymbol]: any
-
-  constructor(
-    code: any,
-    compilerOptions?: CompilerOptions,
-    vmOptions?: NodeVMOptions
-  ) {
-    this[OriginalCodeSymbol] =
-      typeof code === 'string' ? code : `module.exports = ${dump(code)}`
-    this[TranspiledCodeSymbol] = transpile(
-      this[OriginalCodeSymbol],
-      compilerOptions
-    )
-    const vm = new NodeVM({
-      timeout: 10000,
-      sandbox: {},
-      ...vmOptions,
-    })
-    this[ModuleSymbol] = vm.run(new VMScript(this[TranspiledCodeSymbol]))
-
-    // Create getters
-    for (let key in this[ModuleSymbol]) {
-      Object.defineProperty(this, key, {
-        get: () => {
-          return this[ModuleSymbol][key]
-        },
-        set: () => {
-          // No setter
-        },
-      })
-    }
-  }
-}
-
 export default function createType({
   name = 'tag:yaml.org,2002:ts/module',
   compilerOptions = {},
@@ -71,9 +34,11 @@ export default function createType({
       return true
     },
     construct: (code: string) => {
-      return new TSModule(code, compilerOptions, vmOptions)
+      return compile(code, compilerOptions, vmOptions)
     },
-    instanceOf: TSModule,
+    predicate: (data: any) => {
+      return !!data[OriginalCodeSymbol] && !!data[TranspiledCodeSymbol]
+    },
     represent: {
       original: (data: any) => {
         return data[OriginalCodeSymbol]
@@ -84,6 +49,30 @@ export default function createType({
     },
     defaultStyle: 'transpiled',
   })
+}
+
+export function compile<T = any>(
+  code: any,
+  compilerOptions?: CompilerOptions,
+  vmOptions?: NodeVMOptions
+): T {
+  const originalCode =
+    typeof code === 'string' ? code : `module.exports = ${dump(code)}`
+  const transpiledCode = transpile(originalCode, compilerOptions)
+
+  // Create VM
+  const vm = new NodeVM({
+    timeout: 10000,
+    sandbox: {},
+    ...vmOptions,
+  })
+  const compiledModule = vm.run(new VMScript(transpiledCode))
+
+  // Add meta data
+  compiledModule[OriginalCodeSymbol] = originalCode
+  compiledModule[TranspiledCodeSymbol] = transpiledCode
+
+  return compiledModule
 }
 
 export function transpile(
