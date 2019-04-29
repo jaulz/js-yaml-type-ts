@@ -1,14 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`dumps code correctly (original style) 1`] = `
+exports[`createType dumps code correctly (original style) 1`] = `
 Object {
-  "customModule": Object {
-    "default": Object {
-      "asyncFunc": [Function],
-      "boolean": true,
-      "func": [Function],
-      "jsx": [Function],
-    },
+  "customModule": TSModule {
     Symbol(originalCode): "export default {
   boolean: true,
   func: () => true,
@@ -62,19 +56,21 @@ exports.default = {
     }); }); },
     jsx: function (React) { return React.createElement(Test, null); },
 };",
+    Symbol(module): Object {
+      "default": Object {
+        "asyncFunc": [Function],
+        "boolean": true,
+        "func": [Function],
+        "jsx": [Function],
+      },
+    },
   },
 }
 `;
 
-exports[`dumps code correctly (transpiled style) 1`] = `
+exports[`createType dumps code correctly (transpiled style) 1`] = `
 Object {
-  "customModule": Object {
-    "default": Object {
-      "asyncFunc": [Function],
-      "boolean": true,
-      "func": [Function],
-      "jsx": [Function],
-    },
+  "customModule": TSModule {
     Symbol(originalCode): "\\"use strict\\";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -223,27 +219,69 @@ exports.default = {
     },
     jsx: function (React) { return React.createElement(Test, null); },
 };",
+    Symbol(module): Object {
+      "default": Object {
+        "asyncFunc": [Function],
+        "boolean": true,
+        "func": [Function],
+        "jsx": [Function],
+      },
+    },
   },
 }
 `;
 
-exports[`throw error for invalid module 1`] = `
+exports[`createType dumps code correctly if the module was manually created (original style) 1`] = `
+Object {
+  "customModule": TSModule {
+    Symbol(originalCode): "module.exports = { default: { boolean: true, func: function () { return true; }, asyncFunc: function () {
+                    return Promise.resolve(true);
+                } } }",
+    Symbol(transpiledCode): "module.exports = { default: { boolean: true, func: function () { return true; }, asyncFunc: function () {
+            return Promise.resolve(true);
+        } } };",
+    Symbol(module): Object {
+      "default": Object {
+        "asyncFunc": [Function],
+        "boolean": true,
+        "func": [Function],
+      },
+    },
+  },
+}
+`;
+
+exports[`createType dumps code correctly if the module was manually created (transpiled style) 1`] = `
+Object {
+  "customModule": TSModule {
+    Symbol(originalCode): "module.exports = { default: { boolean: true, func: function () { return true; }, asyncFunc: function () {
+            return Promise.resolve(true);
+        } } };",
+    Symbol(transpiledCode): "module.exports = { default: { boolean: true, func: function () { return true; }, asyncFunc: function () {
+            return Promise.resolve(true);
+        } } };",
+    Symbol(module): Object {
+      "default": Object {
+        "asyncFunc": [Function],
+        "boolean": true,
+        "func": [Function],
+      },
+    },
+  },
+}
+`;
+
+exports[`createType throws error for invalid module 1`] = `
 "cannot resolve a node with !<tag:yaml.org,2002:ts/module> explicit tag at line 2, column 32:
     customModule: !!ts/module '---'
                                    ^"
 `;
 
-exports[`throw error for invalid module: log 1`] = `[Error: SyntaxError: Expression expected.]`;
+exports[`createType throws error for invalid module: log 1`] = `[Error: SyntaxError: Expression expected.]`;
 
-exports[`transpiles code correctly 1`] = `
+exports[`createType transpiles code correctly 1`] = `
 Object {
-  "customModule": Object {
-    "default": Object {
-      "asyncFunc": [Function],
-      "boolean": true,
-      "func": [Function],
-      "jsx": [Function],
-    },
+  "customModule": TSModule {
     Symbol(originalCode): "export default {
   boolean: true,
   func: () => true,
@@ -297,6 +335,14 @@ exports.default = {
     }); }); },
     jsx: function (React) { return React.createElement(Test, null); },
 };",
+    Symbol(module): Object {
+      "default": Object {
+        "asyncFunc": [Function],
+        "boolean": true,
+        "func": [Function],
+        "jsx": [Function],
+      },
+    },
   },
 }
 `;

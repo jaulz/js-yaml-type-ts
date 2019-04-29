@@ -2,6 +2,7 @@ import yaml from 'js-yaml'
 import { CompilerOptions } from 'typescript'
 import ts from 'typescript'
 import { NodeVM, NodeVMOptions, VMScript } from 'vm2'
+import dump from './dump'
 
 export interface Options {
   name?: string
@@ -12,6 +13,44 @@ export interface Options {
 
 export const OriginalCodeSymbol = Symbol('originalCode')
 export const TranspiledCodeSymbol = Symbol('transpiledCode')
+export const ModuleSymbol = Symbol('module')
+
+export class TSModule {
+  [OriginalCodeSymbol]: string;
+  [TranspiledCodeSymbol]: string;
+  [ModuleSymbol]: any
+
+  constructor(
+    code: any,
+    compilerOptions?: CompilerOptions,
+    vmOptions?: NodeVMOptions
+  ) {
+    this[OriginalCodeSymbol] =
+      typeof code === 'string' ? code : `module.exports = ${dump(code)}`
+    this[TranspiledCodeSymbol] = transpile(
+      this[OriginalCodeSymbol],
+      compilerOptions
+    )
+    const vm = new NodeVM({
+      timeout: 10000,
+      sandbox: {},
+      ...vmOptions,
+    })
+    this[ModuleSymbol] = vm.run(new VMScript(this[TranspiledCodeSymbol]))
+
+    // Create getters
+    for (let key in this[ModuleSymbol]) {
+      Object.defineProperty(this, key, {
+        get: () => {
+          return this[ModuleSymbol][key]
+        },
+        set: () => {
+          // No setter
+        },
+      })
+    }
+  }
+}
 
 export default function createType({
   name = 'tag:yaml.org,2002:ts/module',
@@ -32,24 +71,9 @@ export default function createType({
       return true
     },
     construct: (code: string) => {
-      const transpiledCode = transpile(code, compilerOptions)
-      const vm = new NodeVM({
-        timeout: 10000,
-        sandbox: {},
-        ...vmOptions,
-      })
-      const script = new VMScript(transpiledCode)
-      const tsModule = vm.run(script)
-
-      // Define meta data
-      tsModule[OriginalCodeSymbol] = code
-      tsModule[TranspiledCodeSymbol] = transpiledCode
-
-      return tsModule
+      return new TSModule(code, compilerOptions, vmOptions)
     },
-    predicate: (data: any) => {
-      return !!data[OriginalCodeSymbol] && !!data[TranspiledCodeSymbol]
-    },
+    instanceOf: TSModule,
     represent: {
       original: (data: any) => {
         return data[OriginalCodeSymbol]

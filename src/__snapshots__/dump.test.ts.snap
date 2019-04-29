@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dump dumps class 1`] = `
+"function Test() {
+            }"
+`;
+
+exports[`dump dumps deep object 1`] = `
+"{ 1: 2, 2: 'string', 3: [ 'array', { undefined: undefined, null: null, custom: 'object', with: 'multiple', keys: function (and) {
+                        return 'functions';
+                    } } ] }"
+`;
+
+exports[`dump dumps flat object 1`] = `"{ 1: 2, 2: 'string', 3: false }"`;
+
+exports[`dump dumps function 1`] = `"function () { return true; }"`;
+
+exports[`dump dumps null 1`] = `"null"`;
+
+exports[`dump dumps number 1`] = `"3"`;
+
+exports[`dump dumps string 1`] = `"'test'"`;
+
+exports[`dump dumps undefined 1`] = `"undefined"`;
+
+exports[`dump dumps undefined 2`] = `"undefined"`;
