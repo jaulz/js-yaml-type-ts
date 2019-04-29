@@ -16,7 +16,8 @@ Object {
   jsx: (React) => <Test />,
 }
 ",
-    Symbol(transpiledCode): "var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    Symbol(transpiledCode): "\\"use strict\\";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator[\\"throw\\"](value)); } catch (e) { reject(e); } }
@@ -74,7 +75,8 @@ Object {
       "func": [Function],
       "jsx": [Function],
     },
-    Symbol(originalCode): "var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    Symbol(originalCode): "\\"use strict\\";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator[\\"throw\\"](value)); } catch (e) { reject(e); } }
@@ -119,7 +121,8 @@ exports.default = {
     }); }); },
     jsx: function (React) { return React.createElement(Test, null); },
 };",
-    Symbol(transpiledCode): "var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    Symbol(transpiledCode): "\\"use strict\\";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try {
             step(generator.next(value));
@@ -248,7 +251,8 @@ Object {
   jsx: (React) => <Test />,
 }
 ",
-    Symbol(transpiledCode): "var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    Symbol(transpiledCode): "\\"use strict\\";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator[\\"throw\\"](value)); } catch (e) { reject(e); } }

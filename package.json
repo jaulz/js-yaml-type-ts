@@ -38,7 +38,8 @@
   },
   "dependencies": {
     "js-yaml": "^3.13.1",
-    "typescript": "^3"
+    "typescript": "^3",
+    "vm2": "^3.8.0"
   },
   "config": {
     "commitizen": {

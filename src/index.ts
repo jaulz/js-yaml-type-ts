@@ -1,10 +1,12 @@
 import yaml from 'js-yaml'
 import { CompilerOptions } from 'typescript'
 import ts from 'typescript'
+import { NodeVM, NodeVMOptions, VMScript } from 'vm2'
 
 export interface Options {
   name?: string
   compilerOptions?: CompilerOptions
+  vmOptions?: NodeVMOptions
   log?: (message?: any, ...optionalParams: any[]) => void
 }
 
@@ -14,6 +16,7 @@ export const TranspiledCodeSymbol = Symbol('transpiledCode')
 export default function createType({
   name = 'tag:yaml.org,2002:ts/module',
   compilerOptions = {},
+  vmOptions = {},
   log = () => {},
 }: Options = {}) {
   return new yaml.Type(name, {
@@ -30,12 +33,13 @@ export default function createType({
     },
     construct: (code: string) => {
       const transpiledCode = transpile(code, compilerOptions)
-
-      // Intentional line breaks in case the last line of code is a comment
-      const tsModule = new Function(`const exports = {}; 
-      ${transpiledCode}; 
-      return exports;
-    `)()
+      const vm = new NodeVM({
+        timeout: 10000,
+        sandbox: {},
+        ...vmOptions,
+      })
+      const script = new VMScript(transpiledCode)
+      const tsModule = vm.run(script)
 
       // Define meta data
       tsModule[OriginalCodeSymbol] = code
@@ -84,11 +88,5 @@ export function transpile(
     throw new Error(`SyntaxError: ${error}`)
   }
 
-  // Remove "use strict;" at the beginning
-  const cleanCode =
-    result.outputText.indexOf('"use strict";') === 0
-      ? result.outputText.substr('"use strict";'.length)
-      : result.outputText
-
-  return cleanCode.trim()
+  return result.outputText.trim()
 }

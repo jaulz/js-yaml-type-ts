@@ -3283,6 +3283,10 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+vm2@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.8.0.tgz#91645c6a8fe2a81836997c0fd8ca80c40004e3a7"
+
 w3c-hr-time@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/w3c-hr-time/-/w3c-hr-time-1.0.1.tgz#82ac2bff63d950ea9e3189a58a65625fedf19045"
