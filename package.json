@@ -1,6 +1,6 @@
 {
-  "name": "js-yaml-type-ts-module",
-  "version": "1.0.8",
+  "name": "js-yaml-type-ts",
+  "version": "1.1.0",
   "description": "Custom type for js-yaml to include Typescript modules",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaulz/js-yaml-type-ts-module.git"
+    "url": "git+https://github.com/jaulz/js-yaml-type-ts.git"
   },
   "keywords": [
     "js-yaml",
@@ -22,9 +22,9 @@
   "author": "jaulz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jaulz/js-yaml-type-ts-module/issues"
+    "url": "https://github.com/jaulz/js-yaml-type-ts/issues"
   },
-  "homepage": "https://github.com/jaulz/js-yaml-type-ts-module#readme",
+  "homepage": "https://github.com/jaulz/js-yaml-type-ts#readme",
   "devDependencies": {
     "@types/jest": "^24.0.11",
     "@types/js-yaml": "^3.12.1",

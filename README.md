@@ -1,17 +1,17 @@
-# js-yaml-type-ts-module
+# js-yaml-type-ts
 
 Use it like this:
 
 ```js
-import createTSModuleType from 'js-yaml-type-ts-module'
+import { createIncludeType, createModuleType } from 'js-yaml-type-ts'
 
-const type = createTSModuleType()
 const schema = new yaml.Schema({
   include: [yaml.DEFAULT_SAFE_SCHEMA],
-  explicit: [type],
+  explicit: [createIncludeType(), createModuleType()],
 })
-const parsed = yaml.load(
+const tsModule = yaml.load(
   `
+customInclude: !!ts/include "fixtures/include.tsx"
 customModule: !!ts/module |
   export default {
     boolean: true,
