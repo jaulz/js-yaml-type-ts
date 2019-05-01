@@ -2,9 +2,11 @@ import fs from 'fs'
 import path from 'path'
 import yaml from 'js-yaml'
 import { CompilerOptions } from 'typescript'
-import { NodeVM, NodeVMOptions, VMScript } from 'vm2'
+import { NodeVMOptions } from 'vm2'
 import transpile from './transpile'
+import compile from './compile'
 
+export { default as compile } from './compile'
 export { default as dump } from './dump'
 export { default as transpile } from './transpile'
 
@@ -94,28 +96,4 @@ export function createModuleType({
     },
     defaultStyle: 'transpiled',
   })
-}
-
-export function compile<T = any>(
-  code: any,
-  compilerOptions?: CompilerOptions,
-  vmOptions?: NodeVMOptions
-): T {
-  const transpiledCode = transpile(code, compilerOptions)
-
-  // Create VM
-  const vm = new NodeVM({
-    timeout: 10000,
-    sandbox: {},
-    ...vmOptions,
-  })
-  const compiledModule = vm.run(new VMScript(transpiledCode))
-
-  // Add meta data
-  if (compiledModule) {
-    compiledModule[OriginalCodeSymbol] = code
-    compiledModule[TranspiledCodeSymbol] = transpiledCode
-  }
-
-  return compiledModule
 }

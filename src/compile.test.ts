@@ -1,8 +1,8 @@
-import transpile from './transpile'
+import compile from './compile'
 
-describe('transpile', () => {
-  it('transpiles code correctly', () => {
-    const content = transpile(`
+describe('compile', () => {
+  it('compile code correctly', () => {
+    const content = compile(`
       export default {
         boolean: true,
         func: () => true,
@@ -12,7 +12,7 @@ describe('transpile', () => {
     `)
 
     expect(content).not.toBeNull()
-    expect(typeof content).toEqual('string')
+    expect(typeof content).toEqual('object')
     expect(content).toMatchSnapshot()
   })
 })
