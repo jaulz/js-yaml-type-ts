@@ -169,7 +169,7 @@ exports[`createIncludeType throws error for invalid module 1`] = `
                                     ^"
 `;
 
-exports[`createIncludeType throws error for invalid module: log 1`] = `[Error: ENOENT: no such file or directory, open 'C:\\dev\\projects\\js-yaml-type-ts-module\\---']`;
+exports[`createIncludeType throws error for invalid module: log 1`] = `[Error: ENOENT: no such file or directory, open '/Users/Julian/Documents/dev/projects/js-yaml-type-ts-module/---']`;
 
 exports[`createIncludeType transpiles code correctly 1`] = `
 Object {
@@ -183,11 +183,12 @@ Object {
     Symbol(originalCode): "const Test = () => null
 
 export default {
-    boolean: true,
-    func: () => true,
-    asyncFunc: async () => true,
-    jsx: (React:any) => <Test />,
-  }",
+  boolean: true,
+  func: () => true,
+  asyncFunc: async () => true,
+  jsx: (React: any) => <Test />,
+}
+",
     Symbol(transpiledCode): "\\"use strict\\";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
