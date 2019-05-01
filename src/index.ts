@@ -52,7 +52,7 @@ export function createIncludeType({
       return compile(code, compilerOptions, vmOptions)
     },
     predicate: (data: any) => {
-      // Cannot be dumped
+      // Cannot be dumped and should be dumped as a module instead
       return false
     },
   })
