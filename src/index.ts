@@ -14,7 +14,7 @@ export interface ModuleOptions {
   name?: string
   compilerOptions?: CompilerOptions
   vmOptions?: NodeVMOptions
-  prettier?: (code: string) => string
+  beautify?: (code: string) => string
   log?: (message?: any, ...optionalParams: any[]) => void
 }
 
@@ -71,7 +71,7 @@ export function createModuleType({
   name = 'tag:yaml.org,2002:ts/module',
   compilerOptions = {},
   vmOptions = {},
-  prettier = code => code,
+  beautify = code => code,
   log = () => {},
 }: ModuleOptions = {}) {
   return new yaml.Type(name, {
@@ -94,10 +94,10 @@ export function createModuleType({
     },
     represent: {
       original: (data: any) => {
-        return prettier(data[OriginalCodeSymbol])
+        return beautify(data[OriginalCodeSymbol])
       },
       transpiled: (data: any) => {
-        return prettier(data[TranspiledCodeSymbol])
+        return beautify(data[TranspiledCodeSymbol])
       },
     },
     defaultStyle: 'transpiled',
