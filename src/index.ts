@@ -99,9 +99,7 @@ export function compile<T = any>(
   compilerOptions?: CompilerOptions,
   vmOptions?: NodeVMOptions
 ): T {
-  const originalCode =
-    typeof code === 'string' ? code : `module.exports = ${dump(code)}`
-  const transpiledCode = transpile(originalCode, compilerOptions)
+  const transpiledCode = transpile(code, compilerOptions)
 
   // Create VM
   const vm = new NodeVM({
@@ -113,7 +111,7 @@ export function compile<T = any>(
 
   // Add meta data
   if (compiledModule) {
-    compiledModule[OriginalCodeSymbol] = originalCode
+    compiledModule[OriginalCodeSymbol] = code
     compiledModule[TranspiledCodeSymbol] = transpiledCode
   }
 
@@ -121,21 +119,24 @@ export function compile<T = any>(
 }
 
 export function transpile(
-  code: string,
+  code: any,
   compilerOptions: CompilerOptions = {}
 ): string {
-  const result = ts.transpileModule(code, {
-    reportDiagnostics: true,
-    compilerOptions: {
-      module: ts.ModuleKind.CommonJS,
-      target: ts.ScriptTarget.ES5,
-      jsx: ts.JsxEmit.React,
-      noEmitHelpers: false,
-      sourceMap: false,
-      inlineSourceMap: false,
-      ...compilerOptions,
-    },
-  })
+  const result = ts.transpileModule(
+    typeof code === 'string' ? code : `module.exports = ${dump(code)}`,
+    {
+      reportDiagnostics: true,
+      compilerOptions: {
+        module: ts.ModuleKind.CommonJS,
+        target: ts.ScriptTarget.ES5,
+        jsx: ts.JsxEmit.React,
+        noEmitHelpers: false,
+        sourceMap: false,
+        inlineSourceMap: false,
+        ...compilerOptions,
+      },
+    }
+  )
 
   // Check if there was a compilation error
   const diagnostics = result.diagnostics
