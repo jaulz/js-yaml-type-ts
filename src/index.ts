@@ -84,7 +84,7 @@ export function createModuleType({
       return compile(code, compilerOptions, vmOptions)
     },
     predicate: (data: any) => {
-      return !!data[OriginalCodeSymbol] && !!data[TranspiledCodeSymbol]
+      return data && !!data[OriginalCodeSymbol] && !!data[TranspiledCodeSymbol]
     },
     represent: {
       original: (data: any) => {
