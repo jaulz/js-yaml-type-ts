@@ -4,7 +4,7 @@ import { CompilerOptions } from 'typescript'
 import { OriginalCodeSymbol, TranspiledCodeSymbol } from '.'
 
 export default function compile<T = any>(
-  code: any,
+  code: string | object,
   compilerOptions?: CompilerOptions,
   vmOptions?: NodeVMOptions
 ): T {

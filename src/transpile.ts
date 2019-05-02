@@ -3,11 +3,11 @@ import ts from 'typescript'
 import dump from './dump'
 
 export default function transpile(
-  code: any,
+  code: string | object,
   compilerOptions: CompilerOptions = {}
 ): string {
   const result = ts.transpileModule(
-    typeof code === 'string' ? code : `module.exports = ${dump(code)}`,
+    typeof code === 'string' ? code : `Object.assign(exports, ${dump(code)})`,
     {
       reportDiagnostics: true,
       compilerOptions: {
