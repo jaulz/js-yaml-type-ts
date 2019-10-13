@@ -23,7 +23,7 @@ customModule: !!ts/module |
     asyncFunc: async () => true,
   }
 customFunction: !!ts/function |
-  () => {
+  export default () => {
     return true
   }
 `,

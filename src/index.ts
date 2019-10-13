@@ -28,10 +28,79 @@ export interface IncludeOptions {
 
 export const OriginalCodeSymbol = Symbol('originalCode')
 export const TranspiledCodeSymbol = Symbol('transpiledCode')
-export const ModuleSymbol = Symbol('module')
 
-export function createIncludeType({
-  name = 'tag:yaml.org,2002:ts/include',
+export type CompiledModule = {
+  [key: string]: any
+  [OriginalCodeSymbol]: string
+  [TranspiledCodeSymbol]: string
+}
+
+export type CompiledFunction = ((args: any[]) => any) & {
+  [OriginalCodeSymbol]: string
+  [TranspiledCodeSymbol]: string
+}
+
+export function constructModule(
+  code: string,
+  compilerOptions: CompilerOptions,
+  vmOptions: NodeVMOptions
+) {
+  const transpiledCode = transpile(code, compilerOptions)
+  const compiledModule = compile(transpiledCode, compilerOptions, vmOptions)
+
+  if (!compiledModule) {
+    return compiledModule
+  }
+
+  compiledModule[OriginalCodeSymbol] = code
+  compiledModule[TranspiledCodeSymbol] = transpiledCode
+  return compiledModule as CompiledModule
+}
+
+export function createModuleType({
+  name = 'tag:yaml.org,2002:ts/module',
+  compilerOptions = {},
+  vmOptions = {},
+  format = code => code,
+  log = () => {},
+}: ModuleOptions = {}) {
+  return new yaml.Type(name, {
+    kind: 'scalar',
+    resolve: (code: string) => {
+      try {
+        transpile(code, compilerOptions)
+      } catch (error) {
+        log(error)
+        return false
+      }
+
+      return true
+    },
+    construct: (code: string) => {
+      return constructModule(code, compilerOptions, vmOptions)
+    },
+    predicate: (data: any) => {
+      return (
+        data &&
+        typeof data === 'object' &&
+        !!data[OriginalCodeSymbol] &&
+        !!data[TranspiledCodeSymbol]
+      )
+    },
+    represent: {
+      original: (data: any) => {
+        return format(data[OriginalCodeSymbol])
+      },
+      transpiled: (data: any) => {
+        return format(data[TranspiledCodeSymbol])
+      },
+    },
+    defaultStyle: 'transpiled',
+  })
+}
+
+export function createIncludeModuleType({
+  name = 'tag:yaml.org,2002:ts/includeModule',
   compilerOptions = {},
   vmOptions = {},
   log = () => {},
@@ -58,16 +127,8 @@ export function createIncludeType({
         path.resolve(relativeTo, includePath),
         'utf8'
       )
-      const transpiledCode = transpile(code, compilerOptions)
-      const compiledModule = compile(transpiledCode, compilerOptions, vmOptions)
 
-      if (!compiledModule) {
-        return compiledModule
-      }
-
-      compiledModule[OriginalCodeSymbol] = code
-      compiledModule[TranspiledCodeSymbol] = transpiledCode
-      return compiledModule
+      return constructModule(code, compilerOptions, vmOptions)
     },
     predicate: (data: any) => {
       // Cannot be dumped and should be dumped as a module instead
@@ -76,8 +137,31 @@ export function createIncludeType({
   })
 }
 
-export function createModuleType({
-  name = 'tag:yaml.org,2002:ts/module',
+export function constructFunction(
+  code: string,
+  compilerOptions: CompilerOptions,
+  vmOptions: NodeVMOptions
+) {
+  const transpiledCode = transpile(code, compilerOptions)
+  const transpiledModuleCode = transpile(code, compilerOptions)
+  const compiledModule = compile(
+    transpiledModuleCode,
+    compilerOptions,
+    vmOptions
+  )
+
+  if (!compiledModule) {
+    return compiledModule
+  }
+
+  const compiledFunction = compiledModule.default
+  compiledFunction[OriginalCodeSymbol] = code
+  compiledFunction[TranspiledCodeSymbol] = transpiledCode
+  return compiledFunction as CompiledFunction
+}
+
+export function createFunctionType({
+  name = 'tag:yaml.org,2002:ts/function',
   compilerOptions = {},
   vmOptions = {},
   format = code => code,
@@ -96,19 +180,15 @@ export function createModuleType({
       return true
     },
     construct: (code: string) => {
-      const transpiledCode = transpile(code, compilerOptions)
-      const compiledModule = compile(transpiledCode, compilerOptions, vmOptions)
-
-      if (!compiledModule) {
-        return compiledModule
-      }
-
-      compiledModule[OriginalCodeSymbol] = code
-      compiledModule[TranspiledCodeSymbol] = transpiledCode
-      return compiledModule
+      return constructFunction(code, compilerOptions, vmOptions)
     },
     predicate: (data: any) => {
-      return data && !!data[OriginalCodeSymbol] && !!data[TranspiledCodeSymbol]
+      return (
+        data &&
+        typeof data === 'function' &&
+        !!data[OriginalCodeSymbol] &&
+        !!data[TranspiledCodeSymbol]
+      )
     },
     represent: {
       original: (data: any) => {
@@ -122,18 +202,22 @@ export function createModuleType({
   })
 }
 
-export function createFunctionType({
-  name = 'tag:yaml.org,2002:ts/function',
+export function createIncludeFunctionType({
+  name = 'tag:yaml.org,2002:ts/includeFunction',
   compilerOptions = {},
   vmOptions = {},
-  format = code => code,
   log = () => {},
-}: ModuleOptions = {}) {
+  relativeTo = process.cwd(),
+}: IncludeOptions = {}) {
   return new yaml.Type(name, {
     kind: 'scalar',
-    resolve: (code: string) => {
+    resolve: (includePath: string) => {
       try {
-        transpile(`export default ${code}`, compilerOptions)
+        const code = fs.readFileSync(
+          path.resolve(relativeTo, includePath),
+          'utf8'
+        )
+        transpile(code, compilerOptions)
       } catch (error) {
         log(error)
         return false
@@ -141,38 +225,17 @@ export function createFunctionType({
 
       return true
     },
-    construct: (code: string) => {
-      const transpiledCode = transpile(code, compilerOptions)
-      const transpiledModuleCode = transpile(
-        `export default ${code}`,
-        compilerOptions
-      )
-      const compiledModule = compile(
-        transpiledModuleCode,
-        compilerOptions,
-        vmOptions
+    construct: (includePath: string) => {
+      const code = fs.readFileSync(
+        path.resolve(relativeTo, includePath),
+        'utf8'
       )
 
-      if (!compiledModule) {
-        return compiledModule
-      }
-
-      const compiledFunction = compiledModule.default
-      compiledFunction[OriginalCodeSymbol] = code
-      compiledFunction[TranspiledCodeSymbol] = transpiledCode
-      return compiledFunction
+      return constructFunction(code, compilerOptions, vmOptions)
     },
     predicate: (data: any) => {
-      return data && !!data[OriginalCodeSymbol] && !!data[TranspiledCodeSymbol]
+      // Cannot be dumped and should be dumped as a function instead
+      return false
     },
-    represent: {
-      original: (data: any) => {
-        return format(data[OriginalCodeSymbol])
-      },
-      transpiled: (data: any) => {
-        return format(data[TranspiledCodeSymbol])
-      },
-    },
-    defaultStyle: 'transpiled',
   })
 }

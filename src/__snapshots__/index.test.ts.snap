@@ -1,14 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`createFunctionType throws error for invalid module 1`] = `
+exports[`createFunctionType throws error for invalid function 1`] = `
 "cannot resolve a node with !<tag:yaml.org,2002:ts/function> explicit tag at line 2, column 36:
     customFunction: !!ts/function '---'
                                        ^"
 `;
 
-exports[`createFunctionType throws error for invalid module: log 1`] = `[Error: SyntaxError: Expression expected.]`;
+exports[`createFunctionType throws error for invalid function: log 1`] = `[Error: SyntaxError: Expression expected.]`;
 
-exports[`createIncludeType dumps code correctly as module type 1`] = `
+exports[`createIncludeFunctionType throws error for invalid function 1`] = `
+"cannot resolve a node with !<tag:yaml.org,2002:ts/includeFunction> explicit tag at line 2, column 41:
+     ... dule: !!ts/includeFunction '---'
+                                         ^"
+`;
+
+exports[`createIncludeFunctionType throws error for invalid function: log 1`] = `[Error: ENOENT: no such file or directory, open '/Users/Julian/Documents/dev/projects/js-yaml-type-ts-module/---']`;
+
+exports[`createIncludeModuleType dumps code correctly as module type 1`] = `
 Object {
   "customModule": Object {
     "default": Object {
@@ -171,15 +179,15 @@ exports.default = {
 }
 `;
 
-exports[`createIncludeType throws error for invalid module 1`] = `
-"cannot resolve a node with !<tag:yaml.org,2002:ts/include> explicit tag at line 2, column 33:
-    customModule: !!ts/include '---'
-                                    ^"
+exports[`createIncludeModuleType throws error for invalid module 1`] = `
+"cannot resolve a node with !<tag:yaml.org,2002:ts/includeModule> explicit tag at line 2, column 39:
+     ... Module: !!ts/includeModule '---'
+                                         ^"
 `;
 
-exports[`createIncludeType throws error for invalid module: log 1`] = `[Error: ENOENT: no such file or directory, open '/Users/Julian/Documents/dev/projects/js-yaml-type-ts-module/---']`;
+exports[`createIncludeModuleType throws error for invalid module: log 1`] = `[Error: ENOENT: no such file or directory, open '/Users/Julian/Documents/dev/projects/js-yaml-type-ts-module/---']`;
 
-exports[`createIncludeType transpiles code correctly 1`] = `
+exports[`createIncludeModuleType transpiles code correctly 1`] = `
 Object {
   "customModule": Object {
     "default": Object {

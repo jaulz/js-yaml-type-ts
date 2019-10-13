@@ -1,8 +1,9 @@
 import yaml from 'js-yaml'
 import {
   createFunctionType,
+  createIncludeFunctionType,
   createModuleType,
-  createIncludeType,
+  createIncludeModuleType,
 } from './index'
 
 describe('createModuleType', () => {
@@ -137,15 +138,15 @@ customModule: !!ts/module '---'
   })
 })
 
-describe('createIncludeType', () => {
+describe('createIncludeModuleType', () => {
   it('transpiles code correctly', () => {
-    const type = createIncludeType()
+    const type = createIncludeModuleType()
     const schema = new yaml.Schema({
       include: [yaml.DEFAULT_SAFE_SCHEMA],
       explicit: [type],
     })
     const content = yaml.load(
-      `customModule: !!ts/include "fixtures/include.tsx"`,
+      `customModule: !!ts/includeModule "fixtures/module.tsx"`,
       { schema }
     )
 
@@ -160,7 +161,7 @@ describe('createIncludeType', () => {
   })
 
   it('dumps code correctly as module type', () => {
-    const type = createIncludeType({
+    const type = createIncludeModuleType({
       log: console.log,
     })
     const schema = new yaml.Schema({
@@ -170,7 +171,10 @@ describe('createIncludeType', () => {
     const options = { schema }
     const content = yaml.load(
       yaml.dump(
-        yaml.load(`customModule: !!ts/include "fixtures/include.tsx"`, options),
+        yaml.load(
+          `customModule: !!ts/includeModule "fixtures/module.tsx"`,
+          options
+        ),
         {
           ...options,
         }
@@ -190,7 +194,7 @@ describe('createIncludeType', () => {
 
   it('throws error for invalid module', () => {
     const log = jest.fn()
-    const type = createIncludeType({ log })
+    const type = createIncludeModuleType({ log })
     const schema = new yaml.Schema({
       include: [yaml.DEFAULT_SAFE_SCHEMA],
       explicit: [type],
@@ -199,7 +203,7 @@ describe('createIncludeType', () => {
     expect(() => {
       yaml.load(
         `
-customModule: !!ts/include '---'
+customModule: !!ts/includeModule '---'
   `,
         { schema }
       )
@@ -218,7 +222,7 @@ describe('createFunctionType', () => {
     const content = yaml.load(
       `
 customFunction: !!ts/function |
-  (input) => {
+  export default (input) => {
     return input
   }
 `,
@@ -242,7 +246,7 @@ customFunction: !!ts/function |
         yaml.load(
           `
 customFunction: !!ts/function |
-  (input) => {
+  export default (input) => {
     return input
   }
 `,
@@ -258,6 +262,7 @@ customFunction: !!ts/function |
       options
     )
 
+    expect(content).not.toBeNull()
     expect(content.customFunction).not.toBeNull()
     expect(typeof content.customFunction).toEqual('function')
     expect(content.customFunction('test')).toEqual('test')
@@ -275,7 +280,7 @@ customFunction: !!ts/function |
         yaml.load(
           `
 customFunction: !!ts/function |
-  (input) => {
+  export default (input) => {
     return input
   }
 `,
@@ -291,12 +296,13 @@ customFunction: !!ts/function |
       options
     )
 
+    expect(content).not.toBeNull()
     expect(content.customFunction).not.toBeNull()
     expect(typeof content.customFunction).toEqual('function')
     expect(content.customFunction('test')).toEqual('test')
   })
 
-  it('throws error for invalid module', () => {
+  it('throws error for invalid function', () => {
     const log = jest.fn()
     const type = createFunctionType({ log })
     const schema = new yaml.Schema({
@@ -308,6 +314,72 @@ customFunction: !!ts/function |
       yaml.load(
         `
 customFunction: !!ts/function '---'
+  `,
+        { schema }
+      )
+    }).toThrowErrorMatchingSnapshot()
+    expect(log.mock.calls[0][0]).toMatchSnapshot('log')
+  })
+})
+
+describe('createIncludeFunctionType', () => {
+  it('transpiles code correctly', () => {
+    const type = createIncludeFunctionType()
+    const schema = new yaml.Schema({
+      include: [yaml.DEFAULT_SAFE_SCHEMA],
+      explicit: [type],
+    })
+    const content = yaml.load(
+      `customFunction: !!ts/includeFunction "fixtures/function.tsx"`,
+      { schema }
+    )
+
+    expect(content).not.toBeNull()
+    expect(content.customFunction).not.toBeNull()
+    expect(typeof content.customFunction).toEqual('function')
+    expect(content.customFunction('test')).toEqual('test')
+  })
+
+  it('dumps code correctly as function type', () => {
+    const type = createIncludeFunctionType({
+      log: console.log,
+    })
+    const schema = new yaml.Schema({
+      include: [yaml.DEFAULT_SAFE_SCHEMA],
+      explicit: [type, createFunctionType()],
+    })
+    const options = { schema }
+    const content = yaml.load(
+      yaml.dump(
+        yaml.load(
+          `customFunction: !!ts/includeFunction "fixtures/function.tsx"`,
+          options
+        ),
+        {
+          ...options,
+        }
+      ),
+      options
+    )
+
+    expect(content).not.toBeNull()
+    expect(content.customFunction).not.toBeNull()
+    expect(typeof content.customFunction).toEqual('function')
+    expect(content.customFunction('test')).toEqual('test')
+  })
+
+  it('throws error for invalid function', () => {
+    const log = jest.fn()
+    const type = createIncludeFunctionType({ log })
+    const schema = new yaml.Schema({
+      include: [yaml.DEFAULT_SAFE_SCHEMA],
+      explicit: [type],
+    })
+
+    expect(() => {
+      yaml.load(
+        `
+customModule: !!ts/includeFunction '---'
   `,
         { schema }
       )
