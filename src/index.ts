@@ -155,6 +155,11 @@ export function constructFunction(
   }
 
   const compiledFunction = compiledModule.default
+
+  if (!compiledFunction) {
+    return compiledFunction
+  }
+
   compiledFunction[OriginalCodeSymbol] = code
   compiledFunction[TranspiledCodeSymbol] = transpiledCode
   return compiledFunction as CompiledFunction
