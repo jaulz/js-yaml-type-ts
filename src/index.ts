@@ -188,19 +188,22 @@ export function createFunctionType({
       return constructFunction(code, compilerOptions, vmOptions)
     },
     predicate: (data: any) => {
-      return (
-        data &&
-        typeof data === 'function' &&
-        !!data[OriginalCodeSymbol] &&
-        !!data[TranspiledCodeSymbol]
-      )
+      return data && {}.toString.call(data) === '[object Function]'
     },
     represent: {
       original: (data: any) => {
-        return format(data[OriginalCodeSymbol])
+        const code = data
+          ? data[OriginalCodeSymbol] || `export default ${data.toString()}`
+          : null
+
+        return format(code)
       },
       transpiled: (data: any) => {
-        return format(data[TranspiledCodeSymbol])
+        const code = data
+          ? data[TranspiledCodeSymbol] || `exports.default = ${data.toString()}`
+          : null
+
+        return format(code)
       },
     },
     defaultStyle: 'transpiled',
