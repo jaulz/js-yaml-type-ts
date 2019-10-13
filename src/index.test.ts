@@ -1,5 +1,9 @@
 import yaml from 'js-yaml'
-import { createModuleType, createIncludeType } from './index'
+import {
+  createFunctionType,
+  createModuleType,
+  createIncludeType,
+} from './index'
 
 describe('createModuleType', () => {
   it('transpiles code correctly', () => {
@@ -196,6 +200,114 @@ describe('createIncludeType', () => {
       yaml.load(
         `
 customModule: !!ts/include '---'
+  `,
+        { schema }
+      )
+    }).toThrowErrorMatchingSnapshot()
+    expect(log.mock.calls[0][0]).toMatchSnapshot('log')
+  })
+})
+
+describe('createFunctionType', () => {
+  it('transpiles code correctly', () => {
+    const type = createFunctionType()
+    const schema = new yaml.Schema({
+      include: [yaml.DEFAULT_SAFE_SCHEMA],
+      explicit: [type],
+    })
+    const content = yaml.load(
+      `
+customFunction: !!ts/function |
+  (input) => {
+    return input
+  }
+`,
+      { schema }
+    )
+
+    expect(content.customFunction).not.toBeNull()
+    expect(typeof content.customFunction).toEqual('function')
+    expect(content.customFunction('test')).toEqual('test')
+  })
+
+  it('dumps code correctly (original style)', () => {
+    const type = createFunctionType()
+    const schema = new yaml.Schema({
+      include: [yaml.DEFAULT_SAFE_SCHEMA],
+      explicit: [type],
+    })
+    const options = { schema }
+    const content = yaml.load(
+      yaml.dump(
+        yaml.load(
+          `
+customFunction: !!ts/function |
+  (input) => {
+    return input
+  }
+`,
+          options
+        ),
+        {
+          ...options,
+          styles: {
+            'tag:yaml.org,2002:ts/function': 'original',
+          },
+        }
+      ),
+      options
+    )
+
+    expect(content.customFunction).not.toBeNull()
+    expect(typeof content.customFunction).toEqual('function')
+    expect(content.customFunction('test')).toEqual('test')
+  })
+
+  it('dumps code correctly (transpiled style)', () => {
+    const type = createFunctionType()
+    const schema = new yaml.Schema({
+      include: [yaml.DEFAULT_SAFE_SCHEMA],
+      explicit: [type],
+    })
+    const options = { schema }
+    const content = yaml.load(
+      yaml.dump(
+        yaml.load(
+          `
+customFunction: !!ts/function |
+  (input) => {
+    return input
+  }
+`,
+          options
+        ),
+        {
+          ...options,
+          styles: {
+            '!!ts/function': 'transpiled',
+          },
+        }
+      ),
+      options
+    )
+
+    expect(content.customFunction).not.toBeNull()
+    expect(typeof content.customFunction).toEqual('function')
+    expect(content.customFunction('test')).toEqual('test')
+  })
+
+  it('throws error for invalid module', () => {
+    const log = jest.fn()
+    const type = createFunctionType({ log })
+    const schema = new yaml.Schema({
+      include: [yaml.DEFAULT_SAFE_SCHEMA],
+      explicit: [type],
+    })
+
+    expect(() => {
+      yaml.load(
+        `
+customFunction: !!ts/function '---'
   `,
         { schema }
       )

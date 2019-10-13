@@ -3,11 +3,15 @@
 Use it like this:
 
 ```js
-import { createIncludeType, createModuleType } from 'js-yaml-type-ts'
+import {
+  createIncludeType,
+  createModuleType,
+  createFunctionType,
+} from 'js-yaml-type-ts'
 
 const schema = new yaml.Schema({
   include: [yaml.DEFAULT_SAFE_SCHEMA],
-  explicit: [createIncludeType(), createModuleType()],
+  explicit: [createIncludeType(), createModuleType(), createFunctionType()],
 })
 const tsModule = yaml.load(
   `
@@ -17,6 +21,10 @@ customModule: !!ts/module |
     boolean: true,
     func: () => true,
     asyncFunc: async () => true,
+  }
+customFunction: !!ts/function |
+  () => {
+    return true
   }
 `,
   { schema }

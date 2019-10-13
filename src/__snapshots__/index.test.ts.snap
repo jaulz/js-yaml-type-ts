@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`createFunctionType throws error for invalid module 1`] = `
+"cannot resolve a node with !<tag:yaml.org,2002:ts/function> explicit tag at line 2, column 36:
+    customFunction: !!ts/function '---'
+                                       ^"
+`;
+
+exports[`createFunctionType throws error for invalid module: log 1`] = `[Error: SyntaxError: Expression expected.]`;
+
 exports[`createIncludeType dumps code correctly as module type 1`] = `
 Object {
   "customModule": Object {
