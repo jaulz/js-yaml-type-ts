@@ -120,6 +120,48 @@ customModule: !!ts/module |
     expect(content).toMatchSnapshot()
   })
 
+  it('dumps code correctly (transpiled style)', () => {
+    const type = createModuleType()
+    const schema = new yaml.Schema({
+      include: [yaml.DEFAULT_SAFE_SCHEMA],
+      explicit: [type],
+    })
+    const options = { schema }
+    const dumpedContent = yaml.dump(
+      yaml.load(
+        `
+customModule: !!ts/module |
+  export default {
+    boolean: true,
+    func: () => true,
+    asyncFunc: async () => true,
+    jsx: (React) => <Test />,
+  }
+`,
+        options
+      ),
+      {
+        ...options,
+        styles: {
+          '!!ts/module': 'minified',
+        },
+      }
+    )
+
+    expect(dumpedContent).not.toContain(`React`)
+
+    const content = yaml.load(dumpedContent, options)
+
+    expect(content).not.toBeNull()
+    expect(content.customModule).toBeDefined()
+    expect(content.customModule.default).toBeDefined()
+    expect(content.customModule.default.boolean).toEqual(true)
+    expect(content.customModule.default.func).toBeDefined()
+    expect(content.customModule.default.func()).toEqual(true)
+    expect(content.customModule.default.asyncFunc()).resolves.toEqual(true)
+    expect(content).toMatchSnapshot()
+  })
+
   it('throws error for invalid module', () => {
     const type = createModuleType()
     const schema = new yaml.Schema({
@@ -300,6 +342,43 @@ customFunction: !!ts/function |
     )
 
     expect(dumpedContent).toContain(`React.createElement(\"div\"`)
+
+    const content = yaml.load(dumpedContent, options)
+
+    expect(content).not.toBeNull()
+    expect(content.customFunction).not.toBeNull()
+    expect(typeof content.customFunction).toEqual('function')
+    expect(content.customFunction('test')).toEqual('test')
+  })
+
+  it('dumps code correctly (minified style)', () => {
+    const type = createFunctionType()
+    const schema = new yaml.Schema({
+      include: [yaml.DEFAULT_SAFE_SCHEMA],
+      explicit: [type],
+    })
+    const options = { schema }
+    const dumpedContent = yaml.dump(
+      yaml.load(
+        `
+customFunction: !!ts/function |
+  export default (input) => {
+    const Test = () => <div />
+
+    return input
+  }
+`,
+        options
+      ),
+      {
+        ...options,
+        styles: {
+          '!!ts/function': 'minified',
+        },
+      }
+    )
+
+    expect(dumpedContent).not.toContain(`React`)
 
     const content = yaml.load(dumpedContent, options)
 

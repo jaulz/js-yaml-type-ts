@@ -5,9 +5,9 @@ import { CompilerOptions } from 'typescript'
 import { NodeVMOptions } from 'vm2'
 import transpile from './transpile'
 import compile from './compile'
+import minify from './minify'
 
-export { default as compile } from './compile'
-export { default as transpile } from './transpile'
+export { compile, minify, transpile }
 
 export interface ModuleOptions {
   name?: string
@@ -82,6 +82,9 @@ export function createModuleType({
       },
       transpiled: (data: any) => {
         return format(data[TranspiledCodeSymbol])
+      },
+      minified: (data: any) => {
+        return format(minify(data[TranspiledCodeSymbol]))
       },
     },
     defaultStyle: 'transpiled',
@@ -173,6 +176,13 @@ export function createFunctionType({
           : null
 
         return format(code)
+      },
+      minified: (data: any) => {
+        const code = data
+          ? data[TranspiledCodeSymbol] || `exports.default = ${data.toString()}`
+          : null
+
+        return format(minify(code))
       },
     },
     defaultStyle: 'transpiled',

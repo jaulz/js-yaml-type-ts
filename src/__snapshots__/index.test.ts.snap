@@ -461,6 +461,79 @@ exports.default = {
 }
 `;
 
+exports[`createModuleType dumps code correctly (transpiled style) 2`] = `
+Object {
+  "customModule": Object {
+    "default": Object {
+      "asyncFunc": [Function],
+      "boolean": true,
+      "func": [Function],
+      "jsx": [Function],
+    },
+    Symbol(originalCode): "\\"use strict\\";var __awaiter=this&&this.__awaiter||function(e,i,a,c){return new(a=a||Promise)(function(t,n){function r(e){try{u(c.next(e))}catch(e){n(e)}}function o(e){try{u(c.throw(e))}catch(e){n(e)}}function u(e){e.done?t(e.value):function(t){return t instanceof a?t:new a(function(e){e(t)})}(e.value).then(r,o)}u((c=c.apply(e,i||[])).next())})},__generator=this&&this.__generator||function(n,r){var o,u,i,e,a={label:0,sent:function(){if(1&i[0])throw i[1];return i[1]},trys:[],ops:[]};return e={next:t(0),throw:t(1),return:t(2)},\\"function\\"==typeof Symbol&&(e[Symbol.iterator]=function(){return this}),e;function t(t){return function(e){return function(t){if(o)throw new TypeError(\\"Generator is already executing.\\");for(;a;)try{if(o=1,u&&(i=2&t[0]?u.return:t[0]?u.throw||((i=u.return)&&i.call(u),0):u.next)&&!(i=i.call(u,t[1])).done)return i;switch(u=0,i&&(t=[2&t[0],i.value]),t[0]){case 0:case 1:i=t;break;case 4:return a.label++,{value:t[1],done:!1};case 5:a.label++,u=t[1],t=[0];continue;case 7:t=a.ops.pop(),a.trys.pop();continue;default:if(!(i=0<(i=a.trys).length&&i[i.length-1])&&(6===t[0]||2===t[0])){a=0;continue}if(3===t[0]&&(!i||t[1]>i[0]&&t[1]<i[3])){a.label=t[1];break}if(6===t[0]&&a.label<i[1]){a.label=i[1],i=t;break}if(i&&a.label<i[2]){a.label=i[2],a.ops.push(t);break}i[2]&&a.ops.pop(),a.trys.pop();continue}t=r.call(n,a)}catch(e){t=[6,e],u=0}finally{o=i=0}if(5&t[0])throw t[1];return{value:t[0]?t[1]:void 0,done:!0}}([t,e])}}};Object.defineProperty(exports,\\"__esModule\\",{value:!0}),exports.default={boolean:!0,func:function(){return!0},asyncFunc:function(){return __awaiter(void 0,void 0,void 0,function(){return __generator(this,function(e){return[2,!0]})})},jsx:function(e){return e.createElement(Test,null)}};",
+    Symbol(transpiledCode): "\\"use strict\\";
+var __awaiter = this && this.__awaiter || function (e, i, a, c) { return new (a = a || Promise)(function (t, n) { function r(e) { try {
+    u(c.next(e));
+}
+catch (e) {
+    n(e);
+} } function o(e) { try {
+    u(c.throw(e));
+}
+catch (e) {
+    n(e);
+} } function u(e) { e.done ? t(e.value) : function (t) { return t instanceof a ? t : new a(function (e) { e(t); }); }(e.value).then(r, o); } u((c = c.apply(e, i || [])).next()); }); }, __generator = this && this.__generator || function (n, r) { var o, u, i, e, a = { label: 0, sent: function () { if (1 & i[0])
+        throw i[1]; return i[1]; }, trys: [], ops: [] }; return e = { next: t(0), throw: t(1), return: t(2) }, \\"function\\" == typeof Symbol && (e[Symbol.iterator] = function () { return this; }), e; function t(t) { return function (e) { return function (t) { if (o)
+    throw new TypeError(\\"Generator is already executing.\\"); for (; a;)
+    try {
+        if (o = 1, u && (i = 2 & t[0] ? u.return : t[0] ? u.throw || ((i = u.return) && i.call(u), 0) : u.next) && !(i = i.call(u, t[1])).done)
+            return i;
+        switch (u = 0, i && (t = [2 & t[0], i.value]), t[0]) {
+            case 0:
+            case 1:
+                i = t;
+                break;
+            case 4: return a.label++, { value: t[1], done: !1 };
+            case 5:
+                a.label++, u = t[1], t = [0];
+                continue;
+            case 7:
+                t = a.ops.pop(), a.trys.pop();
+                continue;
+            default:
+                if (!(i = 0 < (i = a.trys).length && i[i.length - 1]) && (6 === t[0] || 2 === t[0])) {
+                    a = 0;
+                    continue;
+                }
+                if (3 === t[0] && (!i || t[1] > i[0] && t[1] < i[3])) {
+                    a.label = t[1];
+                    break;
+                }
+                if (6 === t[0] && a.label < i[1]) {
+                    a.label = i[1], i = t;
+                    break;
+                }
+                if (i && a.label < i[2]) {
+                    a.label = i[2], a.ops.push(t);
+                    break;
+                }
+                i[2] && a.ops.pop(), a.trys.pop();
+                continue;
+        }
+        t = r.call(n, a);
+    }
+    catch (e) {
+        t = [6, e], u = 0;
+    }
+    finally {
+        o = i = 0;
+    } if (5 & t[0])
+    throw t[1]; return { value: t[0] ? t[1] : void 0, done: !0 }; }([t, e]); }; } };
+Object.defineProperty(exports, \\"__esModule\\", { value: !0 }), exports.default = { boolean: !0, func: function () { return !0; }, asyncFunc: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (e) { return [2, !0]; }); }); }, jsx: function (e) { return e.createElement(Test, null); } };",
+  },
+}
+`;
+
 exports[`createModuleType throws error for invalid module 1`] = `"SyntaxError: Expression expected."`;
 
 exports[`createModuleType transpiles code correctly 1`] = `

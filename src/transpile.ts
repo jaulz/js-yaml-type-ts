@@ -5,7 +5,7 @@ export default function transpile(
   code: string,
   compilerOptions: CompilerOptions = {}
 ): string {
-  const result = ts.transpileModule(code, {
+  const transpiledCode = ts.transpileModule(code, {
     reportDiagnostics: true,
     compilerOptions: {
       module: ts.ModuleKind.CommonJS,
@@ -19,7 +19,7 @@ export default function transpile(
   })
 
   // Check if there was a compilation error
-  const diagnostics = result.diagnostics
+  const { diagnostics } = transpiledCode
   if (diagnostics && diagnostics.length > 0) {
     const message = diagnostics[0].messageText
     const error = typeof message === 'string' ? message : message.messageText
@@ -27,5 +27,5 @@ export default function transpile(
     throw new Error(`SyntaxError: ${error}`)
   }
 
-  return result.outputText.trim()
+  return transpiledCode.outputText.trim()
 }
