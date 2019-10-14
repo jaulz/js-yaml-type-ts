@@ -43,29 +43,30 @@ customModule: !!ts/module |
       explicit: [type],
     })
     const options = { schema }
-    const content = yaml.load(
-      yaml.dump(
-        yaml.load(
-          `
+    const dumpedContent = yaml.dump(
+      yaml.load(
+        `
 customModule: !!ts/module |
-  export default {
-    boolean: true,
-    func: () => true,
-    asyncFunc: async () => true,
-    jsx: (React) => <Test />,
-  }
+export default {
+ boolean: true,
+ func: () => true,
+ asyncFunc: async () => true,
+ jsx: (React) => <Test />,
+}
 `,
-          options
-        ),
-        {
-          ...options,
-          styles: {
-            'tag:yaml.org,2002:ts/module': 'original',
-          },
-        }
+        options
       ),
-      options
+      {
+        ...options,
+        styles: {
+          'tag:yaml.org,2002:ts/module': 'original',
+        },
+      }
     )
+
+    expect(dumpedContent).toContain('<Test />')
+
+    const content = yaml.load(dumpedContent, options)
 
     expect(content).not.toBeNull()
     expect(content.customModule).toBeDefined()
@@ -84,29 +85,30 @@ customModule: !!ts/module |
       explicit: [type],
     })
     const options = { schema }
-    const content = yaml.load(
-      yaml.dump(
-        yaml.load(
-          `
+    const dumpedContent = yaml.dump(
+      yaml.load(
+        `
 customModule: !!ts/module |
-  export default {
-    boolean: true,
-    func: () => true,
-    asyncFunc: async () => true,
-    jsx: (React) => <Test />,
-  }
+export default {
+  boolean: true,
+  func: () => true,
+  asyncFunc: async () => true,
+  jsx: (React) => <Test />,
+}
 `,
-          options
-        ),
-        {
-          ...options,
-          styles: {
-            '!!ts/module': 'transpiled',
-          },
-        }
+        options
       ),
-      options
+      {
+        ...options,
+        styles: {
+          '!!ts/module': 'transpiled',
+        },
+      }
     )
+
+    expect(dumpedContent).toContain(`React.createElement('Test'`)
+
+    const content = yaml.load(dumpedContent, options)
 
     expect(content).not.toBeNull()
     expect(content.customModule).toBeDefined()
@@ -241,26 +243,29 @@ customFunction: !!ts/function |
       explicit: [type],
     })
     const options = { schema }
-    const content = yaml.load(
-      yaml.dump(
-        yaml.load(
-          `
+    const dumpedContent = yaml.dump(
+      yaml.load(
+        `
 customFunction: !!ts/function |
-  export default (input) => {
-    return input
-  }
+export default (input) => {
+  const Test = () => <div />
+
+  return input
+}
 `,
-          options
-        ),
-        {
-          ...options,
-          styles: {
-            'tag:yaml.org,2002:ts/function': 'original',
-          },
-        }
+        options
       ),
-      options
+      {
+        ...options,
+        styles: {
+          'tag:yaml.org,2002:ts/function': 'original',
+        },
+      }
     )
+
+    expect(dumpedContent).toContain('<div />')
+
+    const content = yaml.load(dumpedContent, options)
 
     expect(content).not.toBeNull()
     expect(content.customFunction).not.toBeNull()
@@ -275,26 +280,29 @@ customFunction: !!ts/function |
       explicit: [type],
     })
     const options = { schema }
-    const content = yaml.load(
-      yaml.dump(
-        yaml.load(
-          `
+    const dumpedContent = yaml.dump(
+      yaml.load(
+        `
 customFunction: !!ts/function |
-  export default (input) => {
-    return input
-  }
+export default (input) => {
+  const Test = () => <div />
+
+  return input
+}
 `,
-          options
-        ),
-        {
-          ...options,
-          styles: {
-            '!!ts/function': 'transpiled',
-          },
-        }
+        options
       ),
-      options
+      {
+        ...options,
+        styles: {
+          '!!ts/function': 'transpiled',
+        },
+      }
     )
+
+    expect(dumpedContent).toContain(`React.createElement('div')`)
+
+    const content = yaml.load(dumpedContent, options)
 
     expect(content).not.toBeNull()
     expect(content.customFunction).not.toBeNull()

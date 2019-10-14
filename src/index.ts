@@ -7,7 +7,6 @@ import transpile from './transpile'
 import compile from './compile'
 
 export { default as compile } from './compile'
-export { default as dump } from './dump'
 export { default as transpile } from './transpile'
 
 export interface ModuleOptions {
