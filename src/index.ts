@@ -172,14 +172,16 @@ export function createFunctionType({
       },
       transpiled: (data: any) => {
         const code = data
-          ? data[TranspiledCodeSymbol] || `exports.default = ${data.toString()}`
+          ? data[TranspiledCodeSymbol] ||
+            transpile(`exports.default = ${data.toString()}`)
           : null
 
         return format(code)
       },
       minified: (data: any) => {
         const code = data
-          ? data[TranspiledCodeSymbol] || `exports.default = ${data.toString()}`
+          ? data[TranspiledCodeSymbol] ||
+            transpile(`exports.default = ${data.toString()}`)
           : null
 
         return format(minify(code))
