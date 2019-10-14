@@ -47,12 +47,12 @@ customModule: !!ts/module |
       yaml.load(
         `
 customModule: !!ts/module |
-export default {
- boolean: true,
- func: () => true,
- asyncFunc: async () => true,
- jsx: (React) => <Test />,
-}
+  export default {
+    boolean: true,
+    func: () => true,
+    asyncFunc: async () => true,
+    jsx: (React) => <Test />,
+  }
 `,
         options
       ),
@@ -89,12 +89,12 @@ export default {
       yaml.load(
         `
 customModule: !!ts/module |
-export default {
-  boolean: true,
-  func: () => true,
-  asyncFunc: async () => true,
-  jsx: (React) => <Test />,
-}
+  export default {
+    boolean: true,
+    func: () => true,
+    asyncFunc: async () => true,
+    jsx: (React) => <Test />,
+  }
 `,
         options
       ),
@@ -106,7 +106,7 @@ export default {
       }
     )
 
-    expect(dumpedContent).toContain(`React.createElement('Test'`)
+    expect(dumpedContent).toContain(`React.createElement(Test`)
 
     const content = yaml.load(dumpedContent, options)
 
@@ -121,8 +121,7 @@ export default {
   })
 
   it('throws error for invalid module', () => {
-    const log = jest.fn()
-    const type = createModuleType({ log })
+    const type = createModuleType()
     const schema = new yaml.Schema({
       include: [yaml.DEFAULT_SAFE_SCHEMA],
       explicit: [type],
@@ -136,7 +135,6 @@ customModule: !!ts/module '---'
         { schema }
       )
     }).toThrowErrorMatchingSnapshot()
-    expect(log.mock.calls[0][0]).toMatchSnapshot('log')
   })
 })
 
@@ -163,9 +161,7 @@ describe('createIncludeModuleType', () => {
   })
 
   it('dumps code correctly as module type', () => {
-    const type = createIncludeModuleType({
-      log: console.log,
-    })
+    const type = createIncludeModuleType()
     const schema = new yaml.Schema({
       include: [yaml.DEFAULT_SAFE_SCHEMA],
       explicit: [type, createModuleType()],
@@ -195,8 +191,7 @@ describe('createIncludeModuleType', () => {
   })
 
   it('throws error for invalid module', () => {
-    const log = jest.fn()
-    const type = createIncludeModuleType({ log })
+    const type = createIncludeModuleType()
     const schema = new yaml.Schema({
       include: [yaml.DEFAULT_SAFE_SCHEMA],
       explicit: [type],
@@ -209,8 +204,12 @@ customModule: !!ts/includeModule '---'
   `,
         { schema }
       )
-    }).toThrowErrorMatchingSnapshot()
-    expect(log.mock.calls[0][0]).toMatchSnapshot('log')
+    }).toThrowError(
+      expect.objectContaining({
+        name: 'Error',
+        message: expect.stringMatching('no such file or directory'),
+      })
+    )
   })
 })
 
@@ -247,11 +246,11 @@ customFunction: !!ts/function |
       yaml.load(
         `
 customFunction: !!ts/function |
-export default (input) => {
-  const Test = () => <div />
+  export default (input) => {
+    const Test = () => <div />
 
-  return input
-}
+    return input
+  }
 `,
         options
       ),
@@ -284,11 +283,11 @@ export default (input) => {
       yaml.load(
         `
 customFunction: !!ts/function |
-export default (input) => {
-  const Test = () => <div />
+  export default (input) => {
+    const Test = () => <div />
 
-  return input
-}
+    return input
+  }
 `,
         options
       ),
@@ -300,7 +299,7 @@ export default (input) => {
       }
     )
 
-    expect(dumpedContent).toContain(`React.createElement('div')`)
+    expect(dumpedContent).toContain(`React.createElement(\"div\"`)
 
     const content = yaml.load(dumpedContent, options)
 
@@ -311,8 +310,7 @@ export default (input) => {
   })
 
   it('throws error for invalid function', () => {
-    const log = jest.fn()
-    const type = createFunctionType({ log })
+    const type = createFunctionType()
     const schema = new yaml.Schema({
       include: [yaml.DEFAULT_SAFE_SCHEMA],
       explicit: [type],
@@ -326,7 +324,6 @@ customFunction: !!ts/function '---'
         { schema }
       )
     }).toThrowErrorMatchingSnapshot()
-    expect(log.mock.calls[0][0]).toMatchSnapshot('log')
   })
 })
 
@@ -349,9 +346,7 @@ describe('createIncludeFunctionType', () => {
   })
 
   it('dumps code correctly as function type', () => {
-    const type = createIncludeFunctionType({
-      log: console.log,
-    })
+    const type = createIncludeFunctionType()
     const schema = new yaml.Schema({
       include: [yaml.DEFAULT_SAFE_SCHEMA],
       explicit: [type, createFunctionType()],
@@ -377,8 +372,7 @@ describe('createIncludeFunctionType', () => {
   })
 
   it('throws error for invalid function', () => {
-    const log = jest.fn()
-    const type = createIncludeFunctionType({ log })
+    const type = createIncludeFunctionType()
     const schema = new yaml.Schema({
       include: [yaml.DEFAULT_SAFE_SCHEMA],
       explicit: [type],
@@ -391,7 +385,11 @@ customModule: !!ts/includeFunction '---'
   `,
         { schema }
       )
-    }).toThrowErrorMatchingSnapshot()
-    expect(log.mock.calls[0][0]).toMatchSnapshot('log')
+    }).toThrowError(
+      expect.objectContaining({
+        name: 'Error',
+        message: expect.stringMatching('no such file or directory'),
+      })
+    )
   })
 })

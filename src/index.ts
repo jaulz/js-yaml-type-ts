@@ -14,7 +14,6 @@ export interface ModuleOptions {
   compilerOptions?: CompilerOptions
   vmOptions?: NodeVMOptions
   format?: (code: string) => string
-  log?: (message?: any, ...optionalParams: any[]) => void
 }
 
 export interface IncludeOptions {
@@ -22,7 +21,6 @@ export interface IncludeOptions {
   compilerOptions?: CompilerOptions
   vmOptions?: NodeVMOptions
   relativeTo?: string
-  log?: (message?: any, ...optionalParams: any[]) => void
 }
 
 export const OriginalCodeSymbol = Symbol('originalCode')
@@ -61,18 +59,10 @@ export function createModuleType({
   compilerOptions = {},
   vmOptions = {},
   format = code => code,
-  log = () => {},
 }: ModuleOptions = {}) {
   return new yaml.Type(name, {
     kind: 'scalar',
-    resolve: (code: string) => {
-      try {
-        transpile(code, compilerOptions)
-      } catch (error) {
-        log(error)
-        return false
-      }
-
+    resolve: () => {
       return true
     },
     construct: (code: string) => {
@@ -102,23 +92,11 @@ export function createIncludeModuleType({
   name = 'tag:yaml.org,2002:ts/includeModule',
   compilerOptions = {},
   vmOptions = {},
-  log = () => {},
   relativeTo = process.cwd(),
 }: IncludeOptions = {}) {
   return new yaml.Type(name, {
     kind: 'scalar',
-    resolve: (includePath: string) => {
-      try {
-        const code = fs.readFileSync(
-          path.resolve(relativeTo, includePath),
-          'utf8'
-        )
-        transpile(code, compilerOptions)
-      } catch (error) {
-        log(error)
-        return false
-      }
-
+    resolve: () => {
       return true
     },
     construct: (includePath: string) => {
@@ -169,18 +147,10 @@ export function createFunctionType({
   compilerOptions = {},
   vmOptions = {},
   format = code => code,
-  log = () => {},
 }: ModuleOptions = {}) {
   return new yaml.Type(name, {
     kind: 'scalar',
-    resolve: (code: string) => {
-      try {
-        transpile(code, compilerOptions)
-      } catch (error) {
-        log(error)
-        return false
-      }
-
+    resolve: () => {
       return true
     },
     construct: (code: string) => {
@@ -213,23 +183,11 @@ export function createIncludeFunctionType({
   name = 'tag:yaml.org,2002:ts/includeFunction',
   compilerOptions = {},
   vmOptions = {},
-  log = () => {},
   relativeTo = process.cwd(),
 }: IncludeOptions = {}) {
   return new yaml.Type(name, {
     kind: 'scalar',
-    resolve: (includePath: string) => {
-      try {
-        const code = fs.readFileSync(
-          path.resolve(relativeTo, includePath),
-          'utf8'
-        )
-        transpile(code, compilerOptions)
-      } catch (error) {
-        log(error)
-        return false
-      }
-
+    resolve: () => {
       return true
     },
     construct: (includePath: string) => {

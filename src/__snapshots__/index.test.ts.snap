@@ -1,20 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`createFunctionType throws error for invalid function 1`] = `
-"cannot resolve a node with !<tag:yaml.org,2002:ts/function> explicit tag at line 2, column 36:
-    customFunction: !!ts/function '---'
-                                       ^"
-`;
-
-exports[`createFunctionType throws error for invalid function: log 1`] = `[Error: SyntaxError: Expression expected.]`;
-
-exports[`createIncludeFunctionType throws error for invalid function 1`] = `
-"cannot resolve a node with !<tag:yaml.org,2002:ts/includeFunction> explicit tag at line 2, column 41:
-     ... dule: !!ts/includeFunction '---'
-                                         ^"
-`;
-
-exports[`createIncludeFunctionType throws error for invalid function: log 1`] = `[Error: ENOENT: no such file or directory, open '/Users/Julian/Documents/dev/projects/js-yaml-type-ts-module/---']`;
+exports[`createFunctionType throws error for invalid function 1`] = `"SyntaxError: Expression expected."`;
 
 exports[`createIncludeModuleType dumps code correctly as module type 1`] = `
 Object {
@@ -27,10 +13,11 @@ Object {
     },
     Symbol(originalCode): "\\"use strict\\";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator[\\"throw\\"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -61,19 +48,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
 Object.defineProperty(exports, \\"__esModule\\", { value: true });
 var Test = function () { return null; };
 exports.default = {
     boolean: true,
     func: function () { return true; },
-    asyncFunc: function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+    asyncFunc: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
         return [2 /*return*/, true];
     }); }); },
     jsx: function (React) { return React.createElement(Test, null); },
 };",
     Symbol(transpiledCode): "\\"use strict\\";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try {
             step(generator.next(value));
@@ -87,7 +74,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         catch (e) {
             reject(e);
         } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -160,14 +147,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
 Object.defineProperty(exports, \\"__esModule\\", { value: true });
 var Test = function () { return null; };
 exports.default = {
     boolean: true,
     func: function () { return true; },
     asyncFunc: function () {
-        return __awaiter(_this, void 0, void 0, function () {
+        return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, true];
             });
@@ -178,14 +164,6 @@ exports.default = {
   },
 }
 `;
-
-exports[`createIncludeModuleType throws error for invalid module 1`] = `
-"cannot resolve a node with !<tag:yaml.org,2002:ts/includeModule> explicit tag at line 2, column 39:
-     ... Module: !!ts/includeModule '---'
-                                         ^"
-`;
-
-exports[`createIncludeModuleType throws error for invalid module: log 1`] = `[Error: ENOENT: no such file or directory, open '/Users/Julian/Documents/dev/projects/js-yaml-type-ts-module/---']`;
 
 exports[`createIncludeModuleType transpiles code correctly 1`] = `
 Object {
@@ -207,10 +185,11 @@ export default {
 ",
     Symbol(transpiledCode): "\\"use strict\\";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator[\\"throw\\"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -241,13 +220,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
 Object.defineProperty(exports, \\"__esModule\\", { value: true });
 var Test = function () { return null; };
 exports.default = {
     boolean: true,
     func: function () { return true; },
-    asyncFunc: function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+    asyncFunc: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
         return [2 /*return*/, true];
     }); }); },
     jsx: function (React) { return React.createElement(Test, null); },
@@ -274,10 +252,11 @@ Object {
 ",
     Symbol(transpiledCode): "\\"use strict\\";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator[\\"throw\\"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -308,12 +287,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
 Object.defineProperty(exports, \\"__esModule\\", { value: true });
 exports.default = {
     boolean: true,
     func: function () { return true; },
-    asyncFunc: function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+    asyncFunc: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
         return [2 /*return*/, true];
     }); }); },
     jsx: function (React) { return React.createElement(Test, null); },
@@ -333,10 +311,11 @@ Object {
     },
     Symbol(originalCode): "\\"use strict\\";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator[\\"throw\\"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -367,18 +346,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
 Object.defineProperty(exports, \\"__esModule\\", { value: true });
 exports.default = {
     boolean: true,
     func: function () { return true; },
-    asyncFunc: function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+    asyncFunc: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
         return [2 /*return*/, true];
     }); }); },
     jsx: function (React) { return React.createElement(Test, null); },
 };",
     Symbol(transpiledCode): "\\"use strict\\";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try {
             step(generator.next(value));
@@ -392,7 +371,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         catch (e) {
             reject(e);
         } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -465,13 +444,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
 Object.defineProperty(exports, \\"__esModule\\", { value: true });
 exports.default = {
     boolean: true,
     func: function () { return true; },
     asyncFunc: function () {
-        return __awaiter(_this, void 0, void 0, function () {
+        return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, true];
             });
@@ -483,13 +461,7 @@ exports.default = {
 }
 `;
 
-exports[`createModuleType throws error for invalid module 1`] = `
-"cannot resolve a node with !<tag:yaml.org,2002:ts/module> explicit tag at line 2, column 32:
-    customModule: !!ts/module '---'
-                                   ^"
-`;
-
-exports[`createModuleType throws error for invalid module: log 1`] = `[Error: SyntaxError: Expression expected.]`;
+exports[`createModuleType throws error for invalid module 1`] = `"SyntaxError: Expression expected."`;
 
 exports[`createModuleType transpiles code correctly 1`] = `
 Object {
@@ -509,10 +481,11 @@ Object {
 ",
     Symbol(transpiledCode): "\\"use strict\\";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator[\\"throw\\"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -543,12 +516,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
 Object.defineProperty(exports, \\"__esModule\\", { value: true });
 exports.default = {
     boolean: true,
     func: function () { return true; },
-    asyncFunc: function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+    asyncFunc: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
         return [2 /*return*/, true];
     }); }); },
     jsx: function (React) { return React.createElement(Test, null); },
