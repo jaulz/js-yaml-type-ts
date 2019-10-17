@@ -123,12 +123,7 @@ export function constructFunction(
   vmOptions: NodeVMOptions
 ) {
   const transpiledCode = transpile(code, compilerOptions)
-  const transpiledModuleCode = transpile(code, compilerOptions)
-  const compiledModule = compile(
-    transpiledModuleCode,
-    compilerOptions,
-    vmOptions
-  )
+  const compiledModule = compile(transpiledCode, compilerOptions, vmOptions)
 
   if (!compiledModule) {
     return compiledModule
